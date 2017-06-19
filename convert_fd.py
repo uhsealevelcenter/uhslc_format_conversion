@@ -41,13 +41,13 @@ for idx, f in enumerate(sta_files):
 
     sta = rw.StationDailyFD()
 
-    # try:
-    sta.dat_read(f, meta)
-    if sta.uhslc_id.data: # protection if .dat file is empty
-        sta.trim()
-        meta.update(sta)
-        sta.write_netcdf(nc_dir_fdd, init['t_ref_str'])
-        # sta.write_csv(csv_dir_fdd)
+    try:
+        sta.dat_read(f, meta)
+        if sta.uhslc_id.data: # protection if .dat file is empty
+            sta.trim()
+            meta.update(sta)
+            sta.write_netcdf(nc_dir_fdd, init['t_ref_str'])
+            # sta.write_csv(csv_dir_fdd)
     except Exception as e:
         msg = 'While processing ' + str(f) + ':\n' + str(e)
         print(msg)
