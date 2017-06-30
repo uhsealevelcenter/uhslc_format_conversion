@@ -1,6 +1,6 @@
 #!/bin/bash
 
-mkdir -p rqds woce
+mkdir -p rqds fast
 
 # cd rqds
 curl -O http://uhslc.soest.hawaii.edu/rqds/global.zip
@@ -15,5 +15,5 @@ do
 done 
 
 curl -O http://uhslc.soest.hawaii.edu/woce/all.zip
-unzip -qo all.zip
+unzip -qod fast all.zip
 
