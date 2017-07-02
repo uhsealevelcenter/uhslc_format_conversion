@@ -217,12 +217,14 @@ class Station(ReadWriteObj):
     def trim(self):
 
         # first sea level data value
+        idx1 = None
         for k, val in enumerate(self.sea_level.data):
             if val != self.sea_level.fill_value:
                 idx1 = k
                 break
 
         # last sea level data value
+        idx2 = None
         for k, val in enumerate(self.sea_level.data[::-1]):
             if val != self.sea_level.fill_value:
                 idx2 = len(self.sea_level.data) - k - 1
@@ -233,11 +235,16 @@ class Station(ReadWriteObj):
         for v in list(nc_vars):
             if isinstance(nc_vars[v], StationVariable) and \
                 'time' in nc_vars[v].dimensions:
-                    nc_vars[v].data = nc_vars[v].data[idx1:idx2+1]
+                    if idx1 is not None:
+                        nc_vars[v].data = nc_vars[v].data[idx1:idx2+1]
+                    else:
+                        nc_vars[v].data = nc_vars[v].data[0]
 
         # trim python datenumbers
-        self.time.pytime = self.time.pytime[idx1:idx2+1]
-
+        if idx1 is not None:
+            self.time.pytime = self.time.pytime[idx1:idx2+1]  
+        else:          
+            self.time.pytime = self.time.pytime[0] 
 
     def write_netcdf(self, nc_dir, t_ref_str):
 
@@ -393,7 +400,10 @@ class StationHourlyRQ(Station):
                 + round(int(hdr[59:62])/600, 3)
             if hdr[62] == 'W':
                 self.lon.data = 360 - self.lon.data
-            self.decimation_method.data = int(hdr[69])
+            if hdr[69] == '\\':
+                self.decimation_method.data = None
+            else:
+                self.decimation_method.data = int(hdr[69])
             self.reference_offset.data = int(hdr[71:76])
             self.reference_code.data = hdr[76]
             self.time.gmt_offset = int(hdr[64:68])/240 # in days
@@ -419,16 +429,18 @@ class StationHourlyRQ(Station):
                 if line[15] == ' ': line = line[:15] + '0' + line[16:]
                 if line[17] == ' ': line = line[:17] + '0' + line[18:]
 
-                spl = line.split()
-                t0 = dt.datetime.strptime(spl[2][0:-1], '%Y%m%d') \
-                    + (int(spl[2][-1]) - 1)*dt.timedelta(hours=12) \
+                lnt = line[11:20]
+                t0 = dt.datetime.strptime(lnt[0:-1], '%Y%m%d') \
+                    + (int(lnt[-1]) - 1)*dt.timedelta(hours=12) \
                     + dt.timedelta(minutes=30)
                 self.time.pytime.extend(
                     [t0 + h*dt.timedelta(hours=1) for h in np.arange(12)])
 
+                lndat = line[20:]
+                spl = [lndat[d:d+5] for d in np.arange(0, 56, 5)]
                 fv = self.sea_level.fill_value
                 self.sea_level.data.extend(
-                    [int(d) if int(d) != 9999 else fv for d in spl[3:]])
+                    [int(d) if int(d) != 9999 else fv for d in spl])
 
         f.close()
 
