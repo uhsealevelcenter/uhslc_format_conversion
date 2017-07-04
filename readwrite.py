@@ -358,8 +358,6 @@ class Station(ReadWriteObj):
                 line = t.strftime(fstr) + str(h) + '\n'
                 f.write(line)
 
-        f.close()
-
 # ---------------------------------------------------------------------------
 
 class StationHourlyRQ(Station):
@@ -443,8 +441,6 @@ class StationHourlyRQ(Station):
                 self.sea_level.data.extend(
                     [int(d) if int(d) != 9999 else fv for d in spl])
 
-        f.close()
-
 # ---------------------------------------------------------------------------
 
 class StationDailyRQ(Station):
@@ -523,8 +519,6 @@ class StationDailyRQ(Station):
                                 [self.sea_level.fill_value])
                         else:
                             self.sea_level.data.extend([d])
-
-        f.close()
 
 # ---------------------------------------------------------------------------
 
@@ -611,8 +605,6 @@ class StationHourlyFD(Station):
                         if t >= lrq + dt.timedelta(days=1):
                             self.last_rq_date.pytime = self.time.pytime[k-1]
                             break
-                        
-        f.close()
 
 # ---------------------------------------------------------------------------
 
@@ -703,8 +695,6 @@ class StationDailyFD(Station):
                             self.last_rq_date.pytime = self.time.pytime[k-1]
                             break
 
-        f.close()
-
 # ---------------------------------------------------------------------------
 
 class Metadata(object):
@@ -720,7 +710,6 @@ class Metadata(object):
         # load dictionary of ISO country codes
         with open('./ISO_3166_codes/iso_3116.json', 'r') as f:
             self.iso_a2_lookup = json.load(f)
-        f.close()
 
         # load existing meta data if possible; otherwise initialize
         if os.path.exists('./meta.geojson'):
