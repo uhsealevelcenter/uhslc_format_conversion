@@ -1,0 +1,3 @@
+# readwrite dependencies
+xmltodict
+unidecode
