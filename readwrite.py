@@ -234,17 +234,17 @@ class Station(ReadWriteObj):
         nc_vars = vars(self)
         for v in list(nc_vars):
             if isinstance(nc_vars[v], StationVariable) and \
-                'time' in nc_vars[v].dimensions:
+                'time' in nc_vars[v].dimensions and v != 'time':
                     if idx1 is not None:
                         nc_vars[v].data = nc_vars[v].data[idx1:idx2+1]
                     else:
-                        nc_vars[v].data = nc_vars[v].data[0]
+                        nc_vars[v].data = []
 
         # trim python datenumbers
         if idx1 is not None:
             self.time.pytime = self.time.pytime[idx1:idx2+1]  
         else:          
-            self.time.pytime = self.time.pytime[0] 
+            self.time.pytime = []
 
     def write_netcdf(self, nc_dir, t_ref_str):
 
@@ -257,8 +257,7 @@ class Station(ReadWriteObj):
         v_core = ['sea_level', 'time', 'lat', 'lon', 'station_name',
             'station_country', 'station_country_code', 'record_id', 'uhslc_id',
             'version', 'gloss_id', 'ssc_id']
-        v_list = [v_all.pop(v_all.index(v))
-            for v in v_core if v in v_all]
+        v_list = [v_all.pop(v_all.index(v)) for v in v_core if v in v_all]
         v_list.extend(sorted(v_all))
 
         # netcdf filename
@@ -409,15 +408,17 @@ class StationHourlyRQ(Station):
             self.time.gmt_offset = int(hdr[64:68])/240 # in days
 
             uidx = None
-            for k, st in enumerate(meta.data): 
-                if st['uhslc_id'] == uid:
+            for k, st in enumerate(meta.data['features']): 
+                if st['properties']['uhslc_id'] == uid:
                     uidx = k
+                    this_sta = meta.data['features'][uidx]
             
             if uidx is not None:
-                self.station_country.data = meta.data[uidx]['country']
-                self.station_country_code.data = meta.data[uidx]['country_code']
-                self.gloss_id.data = meta.data[uidx]['gloss_id']
-                self.ssc_id.data = meta.data[uidx]['ssc_id']
+                self.station_country.data = this_sta['properties']['country']
+                self.station_country_code.data \
+                    = this_sta['properties']['country_code']
+                self.gloss_id.data = this_sta['properties']['gloss_id']
+                self.ssc_id.data = this_sta['properties']['ssc_id']
             else:              
                 self.station_country_code.data = 0
                 self.gloss_id.data = 0
@@ -490,15 +491,17 @@ class StationDailyRQ(Station):
             self.time.gmt_offset = 0 # in days
             
             uidx = None
-            for k, st in enumerate(meta.data): 
-                if st['uhslc_id'] == uid:
+            for k, st in enumerate(meta.data['features']): 
+                if st['properties']['uhslc_id'] == uid:
                     uidx = k
+                    this_sta = meta.data['features'][uidx]
             
             if uidx is not None:
-                self.station_country.data = meta.data[uidx]['country']
-                self.station_country_code.data = meta.data[uidx]['country_code']
-                self.gloss_id.data = meta.data[uidx]['gloss_id']
-                self.ssc_id.data = meta.data[uidx]['ssc_id']
+                self.station_country.data = this_sta['properties']['country']
+                self.station_country_code.data \
+                    = this_sta['properties']['country_code']
+                self.gloss_id.data = this_sta['properties']['gloss_id']
+                self.ssc_id.data = this_sta['properties']['ssc_id']
             else:
                 self.station_country_code.data = 0
                 self.gloss_id.data = 0
@@ -561,18 +564,20 @@ class StationHourlyFD(Station):
             self.time.gmt_offset = 0
 
             uidx = None
-            for k, st in enumerate(meta.data): 
-                if st['uhslc_id'] == uid:
+            for k, st in enumerate(meta.data['features']): 
+                if st['properties']['uhslc_id'] == uid:
                     uidx = k
+                    this_sta = meta.data['features'][uidx]
             
             if uidx is not None:
-                self.station_name.data = meta.data[uidx]['name']
-                self.station_country.data = meta.data[uidx]['country']
-                self.station_country_code.data = meta.data[uidx]['country_code']
-                self.gloss_id.data = meta.data[uidx]['gloss_id']
-                self.ssc_id.data = meta.data[uidx]['ssc_id']
+                self.station_name.data = this_sta['properties']['name']
+                self.station_country.data = this_sta['properties']['country']
+                self.station_country_code.data \
+                    = this_sta['properties']['country_code']
+                self.gloss_id.data = this_sta['properties']['gloss_id']
+                self.ssc_id.data = this_sta['properties']['ssc_id']
             else:
-                self.station_country = 'Unknown'
+                self.station_country.data = 'Unknown'
                 self.station_country_code.data = 0
                 self.ssc_id.data = 'none'
                 self.gloss_id.data = 0
@@ -597,13 +602,15 @@ class StationHourlyFD(Station):
             
             # get last time in the data that is RQ
             self.last_rq_date.pytime = dt.datetime(1,1,1,0,0,0)
-            if meta.data[uidx]['rq_span']['latest'] is not None:
-                lrq = dt.datetime.strptime(
-                    meta.data[uidx]['rq_span']['latest'], '%Y-%m-%d')
-                for k, t in enumerate(self.time.pytime):
-                    if t >= lrq + dt.timedelta(days=1):
-                        self.last_rq_date.pytime = self.time.pytime[k-1]
-                        break
+            if uidx is not None:
+                if this_sta['properties']['rq_span']['latest'] is not None:
+                    lrq = dt.datetime.strptime(
+                        this_sta['properties']['rq_span']['latest'],
+                            '%Y-%m-%d')
+                    for k, t in enumerate(self.time.pytime):
+                        if t >= lrq + dt.timedelta(days=1):
+                            self.last_rq_date.pytime = self.time.pytime[k-1]
+                            break
                         
         f.close()
 
@@ -645,16 +652,18 @@ class StationDailyFD(Station):
             self.time.gmt_offset = 0
 
             uidx = None
-            for k, st in enumerate(meta.data): 
-                if st['uhslc_id'] == uid:
+            for k, st in enumerate(meta.data['features']): 
+                if st['properties']['uhslc_id'] == uid:
                     uidx = k
+                    this_sta = meta.data['features'][uidx]
             
             if uidx is not None:
-                self.station_name.data = meta.data[uidx]['name']
-                self.station_country.data = meta.data[uidx]['country']
-                self.station_country_code.data = meta.data[uidx]['country_code']
-                self.gloss_id.data = meta.data[uidx]['gloss_id']
-                self.ssc_id.data = meta.data[uidx]['ssc_id']
+                self.station_name.data = this_sta['properties']['name']
+                self.station_country.data = this_sta['properties']['country']
+                self.station_country_code.data \
+                    = this_sta['properties']['country_code']
+                self.gloss_id.data = this_sta['properties']['gloss_id']
+                self.ssc_id.data = this_sta['properties']['ssc_id']
             else:
                 self.station_country.data = 'Unknown'
                 self.station_country_code.data = 0
@@ -684,13 +693,15 @@ class StationDailyFD(Station):
             
             # get last time in the data that is RQ
             self.last_rq_date.pytime = dt.datetime(1,1,1,0,0,0)
-            if meta.data[uidx]['rq_span']['latest'] is not None:
-                lrq = dt.datetime.strptime(
-                    meta.data[uidx]['rq_span']['latest'], '%Y-%m-%d')
-                for k, t in enumerate(self.time.pytime):
-                    if t >= lrq + dt.timedelta(days=1):
-                        self.last_rq_date.pytime = self.time.pytime[k-1]
-                        break
+            if uidx is not None:
+                if this_sta['properties']['rq_span']['latest'] is not None:
+                    lrq = dt.datetime.strptime(
+                        this_sta['properties']['rq_span']['latest'],
+                            '%Y-%m-%d')
+                    for k, t in enumerate(self.time.pytime):
+                        if t >= lrq + dt.timedelta(days=1):
+                            self.last_rq_date.pytime = self.time.pytime[k-1]
+                            break
 
         f.close()
 
@@ -712,11 +723,14 @@ class Metadata(object):
         f.close()
 
         # load existing meta data if possible; otherwise initialize
-        if os.path.exists('./meta.json'):
-            with open('./meta.json') as f:
-                self.data = json.load(f)
+        if os.path.exists('./meta.geojson'):
+            with open('./meta.geojson') as f:
+                self.data = json.load(f, object_pairs_hook=OrderedDict)
         else:
-            self.data = []
+            self.data = OrderedDict({
+                'type': 'FeatureCollection',
+                'features': []
+            })
 
         # use ioc meta data to update or initialize stations in list
         for sta in ioc_meta:
@@ -744,93 +758,122 @@ class Metadata(object):
                     uidx = None
                     
                     # update some fields if already in meta list
-                    for k, st in enumerate(self.data): 
-                        if st['uhslc_id'] == uid:
+                    for k, st in enumerate(self.data['features']): 
+                        if st['properties']['uhslc_id'] == uid:
                             uidx = k                            
-                            self.data[uidx]['ssc_id'] = sta['ssc_id'][4:]
-                            self.data[uidx]['gloss_id'] = gid
-                            self.data[uidx]['country'] = cnm
-                            self.data[uidx]['country_code'] = ccd
+                            self.data['features'][uidx]['properties']\
+                                ['ssc_id'] = sta['ssc_id'][4:]
+                            self.data['features'][uidx]['properties']\
+                                ['gloss_id'] = gid
+                            self.data['features'][uidx]['properties']\
+                                ['country'] = cnm
+                            self.data['features'][uidx]['properties']\
+                                ['country_code'] = ccd
                     
                     # create new station in list if not present        
                     if uidx is None:
-                        self.data.append({
-                            'name': sta['name'],
-                            'uhslc_id': uid,
-                            'ssc_id': sta['ssc_id'][4:],
-                            'gloss_id': gid,
-                            'country': cnm,
-                            'country_code': ccd,
-                            'fd_span': {
-                                'oldest': None,
-                                'latest': None
-                            },
-                            'rq_span': {
-                                'oldest': None,
-                                'latest': None
+                        self.data['features'].append(
+                            {
+                                'type': 'Feature',
+                                'geometry': {
+                                    'type': 'Point',
+                                    'coordinates': [None, None]
+                                },
+                                'properties': {
+                                    'name': sta['name'],
+                                    'uhslc_id': uid,
+                                    'ssc_id': sta['ssc_id'][4:],
+                                    'gloss_id': gid,
+                                    'country': cnm,
+                                    'country_code': ccd,
+                                    'fd_span': {
+                                        'oldest': None,
+                                        'latest': None
+                                    },
+                                    'rq_span': {
+                                        'oldest': None,
+                                        'latest': None
+                                    }
+                                }
                             }
-                        })
+                        )
                         
     # ----------------------------------------------------------------------
 
     def update(self, sta):
         
         uidx = None
-        for k, st in enumerate(self.data): 
-            if st['uhslc_id'] == sta.uhslc_id.data:
+        for k, st in enumerate(self.data['features']): 
+            if st['properties']['uhslc_id'] == sta.uhslc_id.data:
                 uidx = k
         
         if uidx is None:
-            self.data.append({
-                'name': sta.station_name.data,
-                'country': sta.station_country.data,
-                'country_code': sta.station_country_code.data,
-                'uhslc_id': sta.uhslc_id.data,
-                'ssc_id': sta.ssc_id.data,
-                'gloss_id': sta.gloss_id.data,
-                'fd_span': {
-                    'oldest': None,
-                    'latest': None
-                },
-                'rq_span': {
-                    'oldest': None,
-                    'latest': None
+            self.data['features'].append(
+                {
+                    'type': 'Feature',
+                    'geometry': {
+                        'type': 'Point',
+                        'coordinates': [sta.lon.data, sta.lat.data]
+                    },
+                    'properties': {
+                        'name': sta.station_name.data,
+                        'uhslc_id': sta.uhslc_id.data,
+                        'ssc_id': sta.ssc_id.data,
+                        'gloss_id': sta.gloss_id.data,
+                        'country': sta.station_country.data,
+                        'country_code': sta.station_country_code.data,
+                        'fd_span': {
+                            'oldest': None,
+                            'latest': None
+                        },
+                        'rq_span': {
+                            'oldest': None,
+                            'latest': None
+                        }
+                    }
                 }
-            })
-            uidx = len(self.data) - 1
+            )
+            uidx = len(self.data['features']) - 1
         
         # if daily RQ, update with dates of oldest/latest RQ data
         if isinstance(sta, StationDailyRQ):
             
-            # prefer Pat's station name over IOC station name
-            self.data[uidx]['name'] = sta.station_name.data
+            # prefer Pat's station name/lat/lon
+            self.data['features'][uidx]\
+                ['properties']['name'] = sta.station_name.data
+            self.data['features'][uidx]\
+                ['geometry']['coordinates'] = [sta.lon.data, sta.lat.data]
             
-            oldest = self.data[uidx]['rq_span']['oldest']
+            oldest = \
+                self.data['features'][uidx]['properties']['rq_span']['oldest']
             if (oldest is None or
                 sta.time.pytime[0] < dt.datetime.strptime(oldest, '%Y-%m-%d')):
-                self.data[uidx]['rq_span']['oldest'] = \
-                    sta.time.pytime[0].strftime('%Y-%m-%d')
+                self.data['features'][uidx]['properties']['rq_span']\
+                    ['oldest'] = sta.time.pytime[0].strftime('%Y-%m-%d')
 
-            latest = self.data[uidx]['rq_span']['latest']
+            latest = \
+                self.data['features'][uidx]['properties']['rq_span']['latest']
             if (latest is None or
                 sta.time.pytime[-1] > dt.datetime.strptime(latest, '%Y-%m-%d')):
-                self.data[uidx]['rq_span']['latest'] = \
-                    sta.time.pytime[-1].strftime('%Y-%m-%d')
+                self.data['features'][uidx]['properties']['rq_span']\
+                    ['latest'] = sta.time.pytime[-1].strftime('%Y-%m-%d')
             
         # if daily FD, update with dates of oldest/latest FD data
         if isinstance(sta, StationDailyFD):
             
-            oldest = self.data[uidx]['fd_span']['oldest']
+            oldest = \
+                self.data['features'][uidx]['properties']['fd_span']['oldest']
             if (oldest is None or
                 sta.time.pytime[0] < dt.datetime.strptime(oldest, '%Y-%m-%d')):
-                self.data[uidx]['fd_span']['oldest'] = \
-                    sta.time.pytime[0].strftime('%Y-%m-%d')
+                self.data['features'][uidx]['properties']['fd_span']\
+                    ['oldest'] = sta.time.pytime[0].strftime('%Y-%m-%d')
 
-            latest = self.data[uidx]['fd_span']['latest']
+            latest = \
+                self.data['features'][uidx]['properties']['fd_span']['latest']
             if (latest is None or
                 sta.time.pytime[-1] > dt.datetime.strptime(latest, '%Y-%m-%d')):
-                self.data[uidx]['fd_span']['latest'] = \
-                    sta.time.pytime[-1].strftime('%Y-%m-%d')
+                self.data['features'][uidx]['properties']['fd_span']\
+                    ['latest'] = sta.time.pytime[-1].strftime('%Y-%m-%d')
                     
     # -----------------------------------------------------------------------
     
@@ -838,9 +881,9 @@ class Metadata(object):
         
         not_in = ''
         
-        for sta in self.data:
-            if sta['ssc_id'] == 'none':
-                not_in += str(sta['uhslc_id']) + ', '
+        for sta in self.data['features']:
+            if sta['properties']['ssc_id'] == 'none':
+                not_in += str(sta['properties']['uhslc_id']) + ', '
         
         if not_in:
             print('\n**The following UHSLC IDs are not in the IOC SSC**')
@@ -849,11 +892,12 @@ class Metadata(object):
     # -----------------------------------------------------------------------
                     
     def write_json(self):
-        
+                
         # sort stations in list by increasing uhslc id
-        self.data = sorted(self.data, key=lambda k: k['uhslc_id'])
+        self.data['features'] = sorted(self.data['features'],
+            key=lambda k: k['properties']['uhslc_id'])
         
-        with open('./meta.json', 'w') as f:
+        with open('./meta.geojson', 'w') as f:
             json.dump(self.data, f)
 
 # ---------------------------------------------------------------------------
@@ -893,7 +937,7 @@ class ProgressBar:
                 
         if description: 
             print(description)
-        print('|%s| 0%% complete' % (' '*self.length), end = '\r')
+        print('\r|%s| 0%% complete' % (' '*self.length), end = '\r')
         
     def update(self):
         
