@@ -1,6 +1,7 @@
 # ---------------------------------------------------------------------------
 
 import os
+import gc
 from glob import glob
 import numpy as np
 
@@ -60,6 +61,8 @@ for b in basins:
             msg = 'While processing ' + str(f) + ':\n' + str(e)
             print(msg)
             
+        gc.collect() # force garbage collection
+        
         pb.update()
         
     # -----------------------------------------------------------------------
@@ -98,6 +101,8 @@ for b in basins:
             msg = 'While processing ' + str(f) + ':\n' + str(e)
             print(msg)
             
+        gc.collect() # force garbage collection
+        
         pb.update()
         
 # ---------------------------------------------------------------------------

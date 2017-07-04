@@ -1,6 +1,7 @@
 # ---------------------------------------------------------------------------
 
 import os
+import gc
 from glob import glob
 import numpy as np
 
@@ -52,6 +53,8 @@ for idx, f in enumerate(sta_files):
         msg = 'While processing ' + str(f) + ':\n' + str(e)
         print(msg)
     
+    gc.collect() # force garbage collection
+    
     pb.update()
 
 # ---------------------------------------------------------------------------
@@ -87,6 +90,8 @@ for idx, f in enumerate(sta_files):
         msg = 'While processing ' + str(f) + ':\n' + str(e)
         print(msg)
         
+    gc.collect() # force garbage collection
+    
     pb.update()
     
 # ---------------------------------------------------------------------------
