@@ -48,7 +48,7 @@ for idx, f in enumerate(sta_files):
             sta.trim()
             meta.update(sta)
             sta.write_netcdf(nc_dir_fdd, init['t_ref_str'])
-            # sta.write_csv(csv_dir_fdd)
+            sta.write_csv(csv_dir_fdd)
     except Exception as e:
         msg = 'While processing ' + str(f) + ':\n' + str(e)
         print(msg)

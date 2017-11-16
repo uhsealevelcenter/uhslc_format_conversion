@@ -56,7 +56,7 @@ for b in basins:
                 sta.trim()
                 meta.update(sta)
                 sta.write_netcdf(nc_dir_bd, init['t_ref_str'])
-                # sta.write_csv(csv_dir_bd)
+                sta.write_csv(csv_dir_bd)
         except Exception as e:
             msg = 'While processing ' + str(f) + ':\n' + str(e)
             print(msg)
