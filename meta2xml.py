@@ -47,25 +47,25 @@ for stn in range(length):
         lng = lng-360
 
     fd_oldest = s[stn]['properties']['fd_span']['oldest']
-    if fd_oldest == 'null':
+    if fd_oldest == None:
         fd_oldest = ''
     else: 
         fd_oldest = s[stn]['properties']['fd_span']['oldest']
     
     fd_latest = s[stn]['properties']['fd_span']['latest']
-    if fd_latest == 'null':
+    if fd_latest == None:
         fd_latest = ''
     else: 
         fd_latest = s[stn]['properties']['fd_span']['latest']
     
     rq_oldest = s[stn]['properties']['rq_span']['oldest']
-    if rq_oldest == 'null':
+    if rq_oldest == None:
         rq_oldest = ''
     else: 
         rq_oldest = s[stn]['properties']['rq_span']['oldest']
     
     rq_latest = s[stn]['properties']['rq_span']['latest']
-    if rq_latest == 'null':
+    if rq_latest == None:
         rq_latest = ''
     else: 
         rq_latest = s[stn]['properties']['rq_span']['latest']
