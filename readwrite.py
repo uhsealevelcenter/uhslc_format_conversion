@@ -850,6 +850,10 @@ class Metadata(object):
         # if daily FD, update with dates of oldest/latest FD data
         if isinstance(sta, StationDailyFD):
             
+            if self.data['features'][uidx]['geometry']['coordinates'] is None:
+                self.data['features'][uidx]\
+                    ['geometry']['coordinates'] = [sta.lon.data, sta.lat.data]
+            
             oldest = \
                 self.data['features'][uidx]['properties']['fd_span']['oldest']
             if (oldest is None or
