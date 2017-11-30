@@ -14,11 +14,11 @@ def conversion_setup():
     init = {
     
         # directory containing the rqds and fast directories of .dat files
-        'dat_dir' : '../data/dat/',
+        'dat_dir' : 'data/dat/',
         
         # target directories for netcdf and csv station files
-        'nc_dir' : '../data/netcdf/',
-        'csv_dir' : '../data/csv/',
+        'nc_dir' : 'data/netcdf/',
+        'csv_dir' : 'data/csv/',
         
         # reference time for netcdf
         't_ref_str' : '1800-01-01 00:00:00'
