@@ -1,6 +1,5 @@
 # --------------------------------------------------------------------------- 
 import dicttoxml
-import xml.etree.ElementTree as xmlParser
 
 
 import os
