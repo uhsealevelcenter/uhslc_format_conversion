@@ -4,10 +4,36 @@ import os
 import gc
 from glob import glob
 import numpy as np
+import shutil
+import urllib.request
+import time
+import zipfile
 
 import readwrite as rw
 
 # ---------------------------------------------------------------------------
+# setup source dirs
+os.makedirs('fast', exist_ok=True)
+os.makedirs('global', exist_ok=True)
+
+# setup output dirs
+os.makedirs('data/dat/rqds', exist_ok=True)
+os.makedirs('data/dat/fast', exist_ok=True)
+os.makedirs('data/csv', exist_ok=True)
+os.makedirs('data/netcdf', exist_ok=True)
+
+# Collect source data, probably move this to class
+fdfile = 'all.zip'
+
+if not os.path.isfile(fdfile) or (time.time() - os.path.getmtime(fdfile) > 86400):
+
+    print ('Download FD\n')
+    url = 'https://uhslc.soest.hawaii.edu/woce/all.zip'
+    zfn =  os.path.basename(url)
+    with urllib.request.urlopen(url) as response, open(zfn, 'wb') as out_file:
+        shutil.copyfileobj(response, out_file)
+    with zipfile.ZipFile(zfn,"r") as zip_ref:
+        zip_ref.extractall('data/dat/fast')
 
 # initialize source and target directories, etc.
 # see first function definition in readwrite.py
@@ -54,7 +80,8 @@ for idx, f in enumerate(sta_files):
         print(msg)
     
     gc.collect() # force garbage collection
-    
+   
+    meta.write_json() 
     pb.update()
 
 # ---------------------------------------------------------------------------
@@ -91,7 +118,8 @@ for idx, f in enumerate(sta_files):
         print(msg)
         
     gc.collect() # force garbage collection
-    
+   
+    meta.write_json() 
     pb.update()
     
 # ---------------------------------------------------------------------------
