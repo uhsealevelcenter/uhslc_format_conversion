@@ -296,7 +296,7 @@ class Station(ReadWriteObj):
         rootgrp.setncatts(self.attributes)
 
         # create dimensions
-        time = rootgrp.createDimension('time', None)
+        time = rootgrp.createDimension('time', len(self.time.pytime))
         record_id = rootgrp.createDimension('record_id', 1)
         nameMaxLength = rootgrp.createDimension('nameMaxLength',
             len(self.station_name.data))
@@ -311,10 +311,10 @@ class Station(ReadWriteObj):
             if nc_vars[v].fill_value is not None:
                 ncv = rootgrp.createVariable(v, nc_vars[v].nc_format,
                     nc_vars[v].dimensions,
-                    fill_value=nc_vars[v].fill_value)
+                    fill_value=nc_vars[v].fill_value,zlib=True,shuffle=True)
             else:
                 ncv = rootgrp.createVariable(v, nc_vars[v].nc_format,
-                    nc_vars[v].dimensions)
+                    nc_vars[v].dimensions,zlib=True,shuffle=True)
 
             ncv.setncatts(nc_vars[v].attributes)
 
