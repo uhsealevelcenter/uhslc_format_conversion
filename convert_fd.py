@@ -5,11 +5,17 @@ import gc
 from glob import glob
 import numpy as np
 import shutil
+import sys
 import urllib.request
 import time
 import zipfile
 
 import readwrite as rw
+
+if len(sys.argv) == 2:
+    stnid = str(sys.argv[1])
+else:
+    stnid = '*'
 
 # ---------------------------------------------------------------------------
 # setup source dirs
@@ -60,7 +66,7 @@ if not os.path.exists(csv_dir_fdd):
     os.makedirs(csv_dir_fdd)
 
 # get names of .dat files
-sta_files = glob(init['dat_dir'] + 'fast/d*.dat')
+sta_files = glob(init['dat_dir'] + 'fast/d' + stnid + '.dat')
 
 # loop over daily .dat files
 pb = rw.ProgressBar(len(sta_files), '\nConverting daily FD ...')
@@ -98,7 +104,7 @@ if not os.path.exists(csv_dir_fdh):
     os.makedirs(csv_dir_fdh)
 
 # get names of .dat files
-sta_files = glob(init['dat_dir'] + 'fast/h*.dat')
+sta_files = glob(init['dat_dir'] + 'fast/h' + stnid + '.dat')
 
 # loop over hourly .dat files
 pb = rw.ProgressBar(len(sta_files), '\nConverting hourly FD ...')
