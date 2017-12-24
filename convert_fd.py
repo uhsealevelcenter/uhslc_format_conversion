@@ -137,9 +137,9 @@ meta.not_in_SSC()
 meta.write_json()
 
 # ---------------------------------------------------------------------------
-      
 
-
+# copy to web services     
+os.system("rsync -avu data/csv data/netcdf wyrtki:/srv/htdocs/uhslc.soest.hawaii.edu/data/new")
 
 
 
