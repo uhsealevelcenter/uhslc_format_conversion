@@ -139,7 +139,8 @@ meta.write_json()
 # ---------------------------------------------------------------------------
 
 # copy to web services     
-os.system("rsync -avu data/csv data/netcdf wyrtki:/srv/htdocs/uhslc.soest.hawaii.edu/data/new")
+os.system("tar czf netcdf.tgz -C data netcdf")
+os.system("rsync -avu data/csv data/netcdf meta.geojson netcdf.tgz wyrtki:/srv/htdocs/uhslc.soest.hawaii.edu/data")
 
 
 
