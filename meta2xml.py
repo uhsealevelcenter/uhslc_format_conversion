@@ -71,19 +71,40 @@ for stn in range(length):
         rq_latest = s[stn]['properties']['rq_span']['latest']
 
     print('  <station>')
-    print('    <uhslc_id>%s</uhslc_id>' % uhslc_id)
-    print('    <gloss_id>%s</gloss_id>' % gloss_id)
-    print('    <name>%s</name>' % s[stn]['properties']['name'])
+    if uhslc_id != '':
+        print('    <uhslc_id>%s</uhslc_id>' % uhslc_id)
+    else:
+        # print('    <uhslc_id/>')
+        print('    <uhslc_id></uhslc_id>')
+    if gloss_id != '':
+        print('    <gloss_id>%s</gloss_id>' % gloss_id)
+    else:
+        # print('    <gloss_id/>'/)
+        print('    <gloss_id></gloss_id>')
+    # print('    <name>%s</name>' % s[stn]['properties']['name'])
+    print('    <name>%s</name>' % s[stn]['properties']['name'].replace("&","&amp;"))
     print('    <country>%s</country>' % s[stn]['properties']['country'])
-    print('    <latitude>%s</latitude>' % lat)
-    print('    <longitude>%s</longitude>' % lng)
+    print('    <latitude>%.3f</latitude>' % lat)
+    print('    <longitude>%.3f</longitude>' % lng)
     print('    <fast_delivery_data>')
-    print('    <oldest>%s</oldest>' % fd_oldest)
-    print('      <latest>%s</latest>' % fd_latest)
+    if fd_oldest != '':
+        print('      <oldest>%s</oldest>' % fd_oldest)
+        print('      <latest>%s</latest>' % fd_latest)
+    else:
+        # print('      <oldest/>')
+        # print('      <latest/>')
+        print('      <oldest></oldest>')
+        print('      <latest></latest>')
     print('    </fast_delivery_data>')
     print('    <research_quality_data>')
-    print('      <oldest>%s</oldest>' % rq_oldest)
-    print('      <latest>%s</latest>' % rq_latest)
+    if rq_oldest != '':
+        print('      <oldest>%s</oldest>' % rq_oldest)
+        print('      <latest>%s</latest>' % rq_latest)
+    else:
+        # print('      <oldest/>')
+        # print('      <latest/>')
+        print('      <oldest></oldest>')
+        print('      <latest></latest>')
     print('    </research_quality_data>')
     print('  </station>')
 
