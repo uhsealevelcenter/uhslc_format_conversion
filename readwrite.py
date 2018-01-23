@@ -431,7 +431,7 @@ class StationHourlyRQ(Station):
                 lnt = line[11:20]
                 t0 = dt.datetime.strptime(lnt[0:-1], '%Y%m%d') \
                     + (int(lnt[-1]) - 1)*dt.timedelta(hours=12) \
-                    + dt.timedelta(minutes=30)
+                #    + dt.timedelta(minutes=30)
                 self.time.pytime.extend(
                     [t0 + h*dt.timedelta(hours=1) for h in np.arange(12)])
 
@@ -586,7 +586,7 @@ class StationHourlyFD(Station):
 
                 t0 = dt.datetime.strptime(line[11:19], '%Y%m%d') \
                     + (int(line[19]) - 1)*dt.timedelta(hours=12) \
-                    + dt.timedelta(minutes=30)
+                #     + dt.timedelta(minutes=30)
                 self.time.pytime.extend(
                     [t0 + h*dt.timedelta(hours=1) for h in np.arange(12)])
 
