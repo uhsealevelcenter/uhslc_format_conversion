@@ -1,14 +1,14 @@
 # --------------------------------------------------------------------------- 
-import dicttoxml
+# import dicttoxml
 
 
 import os
-import numpy as np
-import datetime as dt
-import netCDF4, urllib, xmltodict, json, time
-from collections import OrderedDict
-from unidecode import unidecode
-from pprint import pprint
+#import numpy as np
+# import datetime as dt
+import json
+#import netCDF4, urllib, xmltodict, json, time
+# from collections import OrderedDict
+# from unidecode import unidecode
 
 if os.path.exists('./meta.geojson'):
     with open('./meta.geojson') as f:
@@ -74,14 +74,13 @@ for stn in range(length):
     if uhslc_id != '':
         print('    <uhslc_id>%s</uhslc_id>' % uhslc_id)
     else:
-        # print('    <uhslc_id/>')
-        print('    <uhslc_id></uhslc_id>')
+        print('    <uhslc_id/>')
+        # print('    <uhslc_id></uhslc_id>')
     if gloss_id != '':
         print('    <gloss_id>%s</gloss_id>' % gloss_id)
     else:
-        # print('    <gloss_id/>'/)
-        print('    <gloss_id></gloss_id>')
-    # print('    <name>%s</name>' % s[stn]['properties']['name'])
+        print('    <gloss_id/>')
+        # print('    <gloss_id></gloss_id>')
     print('    <name>%s</name>' % s[stn]['properties']['name'].replace("&","&amp;"))
     print('    <country>%s</country>' % s[stn]['properties']['country'])
     print('    <latitude>%.5f</latitude>' % lat)
@@ -91,20 +90,20 @@ for stn in range(length):
         print('      <oldest>%s</oldest>' % fd_oldest)
         print('      <latest>%s</latest>' % fd_latest)
     else:
-        # print('      <oldest/>')
-        # print('      <latest/>')
-        print('      <oldest></oldest>')
-        print('      <latest></latest>')
+        print('      <oldest/>')
+        print('      <latest/>')
+        # print('      <oldest></oldest>')
+        # print('      <latest></latest>')
     print('    </fast_delivery_data>')
     print('    <research_quality_data>')
     if rq_oldest != '':
         print('      <oldest>%s</oldest>' % rq_oldest)
         print('      <latest>%s</latest>' % rq_latest)
     else:
-        # print('      <oldest/>')
-        # print('      <latest/>')
-        print('      <oldest></oldest>')
-        print('      <latest></latest>')
+        print('      <oldest/>')
+        print('      <latest/>')
+        # print('      <oldest></oldest>')
+        # print('      <latest></latest>')
     print('    </research_quality_data>')
     print('  </station>')
 
