@@ -21,8 +21,8 @@ meta = rw.Metadata()
 # ---------------------------------------------------------------------------
 
 # names of basin divisions in the RQ data set
-basins = ['atlantic', 'pacific', 'indian']
-# basins = ['atlantic']
+# basins = ['atlantic', 'pacific', 'indian']
+basins = ['pacific']
 
 # ---------------------------------------------------------------------------
 
@@ -48,7 +48,7 @@ for b in basins:
     pb = rw.ProgressBar(len(sta_files), '\nConverting daily RQ ' + b + ' ...')
     for idx, f in enumerate(sta_files):
     
-        sta = rw.StationDailyRQ()
+        sta = rw.StationDailyRQ(b)
     
         try:
             sta.dat_read(f, meta)
@@ -63,6 +63,7 @@ for b in basins:
             
         gc.collect() # force garbage collection
         
+        meta.write_json()
         pb.update()
         
     # -----------------------------------------------------------------------
@@ -87,7 +88,7 @@ for b in basins:
     
         # aggregate data from .dat files for this station
         sta_files = glob(d + '*.dat')
-        sta = rw.StationHourlyRQ()
+        sta = rw.StationHourlyRQ(b)
     
         try:
             for f in sta_files:
@@ -103,6 +104,7 @@ for b in basins:
             
         gc.collect() # force garbage collection
         
+        meta.write_json()
         pb.update()
         
 # ---------------------------------------------------------------------------
