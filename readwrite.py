@@ -362,9 +362,10 @@ class Station(ReadWriteObj):
 
 class StationHourlyRQ(Station):
 
-    def __init__(self):
+    def __init__(self,basin):
         Station.__init__(self)
         self.init_as_RQ('hourly')
+        self.basin = basin
 
     def dat_read_append(self, fname, meta):
 
@@ -445,9 +446,10 @@ class StationHourlyRQ(Station):
 
 class StationDailyRQ(Station):
 
-    def __init__(self):
+    def __init__(self,basin):
         Station.__init__(self)
         self.init_as_RQ('daily')
+        self.basin = basin
 
     def dat_read(self, fname, meta):
 
@@ -498,10 +500,12 @@ class StationDailyRQ(Station):
                     = this_sta['properties']['country_code']
                 self.gloss_id.data = this_sta['properties']['gloss_id']
                 self.ssc_id.data = this_sta['properties']['ssc_id']
+#                self.basin = this_sta['properties']['rq_basin']
             else:
                 self.station_country_code.data = 0
                 self.gloss_id.data = 0
                 self.ssc_id.data = 'none'
+#                self.basin = 'none'
             
             # loop over each line of data
             for line in f:
@@ -525,9 +529,10 @@ class StationDailyRQ(Station):
 
 class StationHourlyFD(Station):
 
-    def __init__(self):
+    def __init__(self,basin):
         Station.__init__(self)
         self.init_as_FD('hourly')
+        self.basin = basin
 
     def dat_read(self, fname, meta):
 
@@ -784,7 +789,9 @@ class Metadata(object):
                                     'rq_span': {
                                         'oldest': None,
                                         'latest': None
-                                    }
+                                    },
+                                    'rq_basin': None,
+                                    'rq_versions': None 
                                 }
                             }
                         )
@@ -792,12 +799,12 @@ class Metadata(object):
     # ----------------------------------------------------------------------
 
     def update(self, sta):
-        
+       
         uidx = None
         for k, st in enumerate(self.data['features']): 
             if st['properties']['uhslc_id'] == sta.uhslc_id.data:
                 uidx = k
-        
+       
         if uidx is None:
             self.data['features'].append(
                 {
@@ -820,15 +827,21 @@ class Metadata(object):
                         'rq_span': {
                             'oldest': None,
                             'latest': None
-                        }
+                        },
+                        'rq_basin': sta.basin,
+                        'rq_versions': None
                     }
                 }
             )
+
             uidx = len(self.data['features']) - 1
         
         # if daily RQ, update with dates of oldest/latest RQ data
         if isinstance(sta, StationDailyRQ):
             
+            self.data['features'][uidx]\
+                ['properties']['rq_basin'] = sta.basin
+
             # prefer Pat's station name/lat/lon
             self.data['features'][uidx]\
                 ['properties']['name'] = sta.station_name.data
