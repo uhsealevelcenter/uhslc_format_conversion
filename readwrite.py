@@ -799,7 +799,7 @@ class Metadata(object):
     # ----------------------------------------------------------------------
 
     def update(self, sta):
-       
+      
         uidx = None
         for k, st in enumerate(self.data['features']): 
             if st['properties']['uhslc_id'] == sta.uhslc_id.data:
@@ -841,6 +841,19 @@ class Metadata(object):
             
             self.data['features'][uidx]\
                 ['properties']['rq_basin'] = sta.basin
+
+            # convert None to a dictionary
+            if self.data['features'][uidx]['properties']['rq_versions'] == None:
+                self.data['features'][uidx]['properties']['rq_versions'] = dict()
+
+            # if the version doesnt exist yet, create it.
+            if self.data['features'][uidx]['properties']['rq_versions'].get(sta.version.data.lower()) == None:
+                self.data['features'][uidx]['properties']['rq_versions'][sta.version.data.lower()] = dict()
+
+            self.data['features'][uidx]['properties']['rq_versions'][sta.version.data.lower()]\
+                ['begin']=sta.time.pytime[0].strftime('%Y-%m-%d')
+            self.data['features'][uidx]['properties']['rq_versions'][sta.version.data.lower()]\
+                ['end']=sta.time.pytime[-1].strftime('%Y-%m-%d')
 
             # prefer Pat's station name/lat/lon
             self.data['features'][uidx]\
