@@ -845,13 +845,15 @@ class Metadata(object):
             if self.data['features'][uidx]['properties']['rq_versions'] == None:
                 self.data['features'][uidx]['properties']['rq_versions'] = dict()
 
-            # if the version doesnt exist yet, create it.
-            if self.data['features'][uidx]['properties']['rq_versions'].get(sta.version.data.lower()) == None:
-                self.data['features'][uidx]['properties']['rq_versions'][sta.version.data.lower()] = dict()
+            vrsn = sta.version.data.lower()
 
-            self.data['features'][uidx]['properties']['rq_versions'][sta.version.data.lower()]\
+            # if the version doesnt exist yet, create it.
+            if self.data['features'][uidx]['properties']['rq_versions'].get(vrsn) == None:
+                self.data['features'][uidx]['properties']['rq_versions'][vrsn] = dict()
+
+            self.data['features'][uidx]['properties']['rq_versions'][vrsn]\
                 ['begin']=sta.time.pytime[0].strftime('%Y-%m-%d')
-            self.data['features'][uidx]['properties']['rq_versions'][sta.version.data.lower()]\
+            self.data['features'][uidx]['properties']['rq_versions'][vrsn]\
                 ['end']=sta.time.pytime[-1].strftime('%Y-%m-%d')
 
             # prefer Pat's station name/lat/lon
