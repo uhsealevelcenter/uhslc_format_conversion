@@ -21,8 +21,8 @@ meta = rw.Metadata()
 # ---------------------------------------------------------------------------
 
 # names of basin divisions in the RQ data set
-# basins = ['atlantic', 'pacific', 'indian']
-basins = ['pacific']
+basins = ['atlantic', 'pacific', 'indian']
+#basins = ['pacific']
 
 # ---------------------------------------------------------------------------
 
