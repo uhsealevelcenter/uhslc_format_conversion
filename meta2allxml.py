@@ -36,13 +36,13 @@ for stn in range(length):
 
     lat = s[stn]['geometry']['coordinates'][1]
     if lat == None:
-        lat = ''
+        lat = 0
     elif lat >= 90:
         lat = lat-180
 
     lng = s[stn]['geometry']['coordinates'][0]
     if lng == None:
-        lng = ''
+        lng = 0
     elif lng >= 180:
         lng = lng-360
 
