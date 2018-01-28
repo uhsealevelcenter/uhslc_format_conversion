@@ -529,10 +529,9 @@ class StationDailyRQ(Station):
 
 class StationHourlyFD(Station):
 
-    def __init__(self,basin):
+    def __init__(self):
         Station.__init__(self)
         self.init_as_FD('hourly')
-        self.basin = basin
 
     def dat_read(self, fname, meta):
 
