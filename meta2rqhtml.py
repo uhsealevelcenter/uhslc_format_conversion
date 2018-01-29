@@ -119,21 +119,3 @@ print('      </tbody>')
 print('   </table>')
 print('</div>')
 
-#          <tr id="uh001a">
-#              <td>001</td>
-#              <td>115</td>
-#              <td>a</td>
-#              <td class="left_text">Pohnpei</td>
-#              <td class="left_text">Micronesia, Federated States of</td>
-#              <td>6.96000</td>
-#              <td>158.21000</td>
-#              <td>1969-05-08</td>
-#              <td>1971-02-28</td>
-#              <td><a href="http://uhslc.soest.hawaii.edu/rqds/pacific/daily/d001a.dat">daily</a> <a href="http://uhslc.soest.hawaii.edu/rqds/pacific/hourly/h001a.zip">hourly</a></td>
-#              <td><a href="http://uhslc.soest.hawaii.edu/data/csv3/rqd/rqd0001a.csv">daily</a> <a href="http://uhslc.soest.hawaii.edu/data/csv3/rqh/rqh0001a.csv">hourly</a></td>
-#              <td><a href="http://uhslc.soest.hawaii.edu/data/nc/rqd/OS_UH-RQD001A_20161203_R.nc">daily</a> <a href="http://uhslc.soest.hawaii.edu/data/nc/rqh/OS_UH-RQH001A_20160323_R.nc">h
-#ourly</a></td>
-#              <td><a href="http://uhslc.soest.hawaii.edu/rqds/pacific/doc/qa001a.dmt">meta</a></td>
-#         </tr>
-      
-
