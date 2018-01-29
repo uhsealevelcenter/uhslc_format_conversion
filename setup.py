@@ -22,17 +22,17 @@ os.makedirs('data/csv', exist_ok=True)
 os.makedirs('data/netcdf', exist_ok=True)
 
 
-rqfile = 'global.zip'
+rqfile = 'all_rqds.zip'
 if not os.path.isfile(rqfile) or (time.time() - os.path.getmtime(rqfile) > 86400):
     print ('Download RQ\n')
-    url = 'https://uhslc.soest.hawaii.edu/rqds/global.zip'
+    url = 'https://uhslc.soest.hawaii.edu/rqds/all_rqds.zip'
     zfn =  os.path.basename(url)
     with urllib.request.urlopen(url) as response, open(zfn, 'wb') as out_file:
         shutil.copyfileobj(response, out_file)
     with zipfile.ZipFile(zfn,"r") as zip_ref:
-        zip_ref.extractall('data/dat')
-        for f in glob('data/dat/global/*'):
-           shutil.move(f, 'data/dat/rqds')
+        zip_ref.extractall('data/dat/rqds')
+#        for f in glob('data/dat/global/*'):
+#           shutil.move(f, 'data/dat/rqds')
 #       shutil.rmtree('data/dat/global')
 
     basins = ['atlantic','pacific','indian']
@@ -48,21 +48,14 @@ if not os.path.isfile(rqfile) or (time.time() - os.path.getmtime(rqfile) > 86400
             msg = 'While processing ' + str(f) + ':\n' + str(e)
             print(msg)
 
-fdfile = 'all.zip'
+fdfile = 'all_fast.zip'
 
 if not os.path.isfile(fdfile) or (time.time() - os.path.getmtime(fdfile) > 86400):
     print ('Download FD\n')
-    url = 'https://uhslc.soest.hawaii.edu/woce/all.zip'
+    url = 'https://uhslc.soest.hawaii.edu/woce/all_fast.zip'
     zfn =  os.path.basename(url)
     with urllib.request.urlopen(url) as response, open(zfn, 'wb') as out_file:
         shutil.copyfileobj(response, out_file)
     with zipfile.ZipFile(zfn,"r") as zip_ref:
-        zip_ref.extractall('data/dat/fast')
+        zip_ref.extractall('data/dat')
 
-#    print ('Download FD\n')
-#    url = 'https://uhslc.soest.hawaii.edu/woce/all.zip'
-#    zfn =  os.path.basename(url)
-#    with urllib.request.urlopen(url) as response, open(zfn, 'wb') as out_file:
-#        shutil.copyfileobj(response, out_file)
-#    with zipfile.ZipFile(zfn,"r") as zip_ref:
-#        zip_ref.extractall('data/dat/fast')
