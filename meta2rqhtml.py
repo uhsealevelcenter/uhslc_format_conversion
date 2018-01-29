@@ -40,7 +40,7 @@ print('')
 for stn in range(length):
 #for stn in range(2):
     if s[stn]['properties']['rq_versions']:
-        versions = list(s[stn]['properties']['rq_versions'].keys())
+        versions = list(sorted(s[stn]['properties']['rq_versions'].keys()))
     for v in range(len(versions)):
         vrsn = versions[v]
 
