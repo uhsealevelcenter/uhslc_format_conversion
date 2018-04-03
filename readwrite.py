@@ -553,11 +553,11 @@ class StationHourlyFD(Station):
             self.station_name.data = self.station_name.data.strip()
 
             self.lat.data = int(hdr[21:23]) \
-                + round(float(hdr[24:28].strip())/600, 3)
+                + round(float(hdr[24:28].strip())/60, 3)
             if hdr[28] == 'S':
                 self.lat.data = -self.lat.data
             self.lon.data = int(hdr[36:39]) \
-                + round(float(hdr[40:44].strip())/600, 3)
+                + round(float(hdr[40:44].strip())/60, 3)
             if hdr[44] == 'W':
                 self.lon.data = 360 - self.lon.data
             self.time.gmt_offset = 0
@@ -639,11 +639,11 @@ class StationDailyFD(Station):
             self.station_name.data = self.station_name.data.strip()
 
             self.lat.data = int(hdr[21:23]) \
-                + round(float(hdr[24:28].strip())/600, 3)
+                + round(float(hdr[24:28].strip())/60, 3)
             if hdr[28] == 'S':
                 self.lat.data = -self.lat.data
             self.lon.data = int(hdr[36:39]) \
-                + round(float(hdr[40:44].strip())/600, 3)
+                + round(float(hdr[40:44].strip())/60, 3)
             if hdr[44] == 'W':
                 self.lon.data = 360 - self.lon.data
             self.time.gmt_offset = 0
