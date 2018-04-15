@@ -510,8 +510,8 @@ class StationDailyRQ(Station):
             # loop over each line of data
             for line in f:
 
-                # t0 = dt.datetime(int(line[10:14]),1,1,12,0) \
-                t0 = dt.datetime(int(line[10:14]),1,1,0,0) \
+                t0 = dt.datetime(int(line[10:14]),1,1,12,0) \
+                # t0 = dt.datetime(int(line[10:14]),1,1,0,0) \
                     + (int(line[15:18]) - 1)*dt.timedelta(days=1)
                 tline = [t0 + h*dt.timedelta(days=1) for h in np.arange(12)]
                 hline = [int(line[k:k+5]) for k in 20+5*np.arange(12)]
@@ -679,8 +679,8 @@ class StationDailyFD(Station):
                 data = data[0:idx]
                 n_days = int(len(data)/5)
 
-                # t0 = dt.datetime(int(line[11:15]),int(line[15:17]),1,12,0)
-                t0 = dt.datetime(int(line[11:15]),int(line[15:17]),1,0,0)
+                t0 = dt.datetime(int(line[11:15]),int(line[15:17]),1,12,0)
+                # t0 = dt.datetime(int(line[11:15]),int(line[15:17]),1,0,0)
 
                 self.time.pytime.extend([t0 + ((int(line[17])-1)*11 + d)\
                     *dt.timedelta(days=1) for d in np.arange(n_days)])
