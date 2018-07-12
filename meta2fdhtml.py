@@ -100,7 +100,7 @@ for stn in range(length):
         print('               <td>%s</td>' % fd_latest)
         print('               <td><a href="%s/d%03d.dat">daily</a> <a href="%s/h%03d.dat">hourly</a></td>' % (dat_dir,uhslc_id,dat_dir,uhslc_id))
         print('               <td><a href="%s/daily/d%03d.csv">daily</a> <a href="%s/hourly/h%03d.csv">hourly</a></td>' % (csv_dir,uhslc_id,csv_dir,uhslc_id))
-        print('               <td><a href="%s/daily/d%03d.nc">daily</a> <a href=""%s/hourly/h%03d.nc">hourly</a></td>' % (nc_dir,uhslc_id,nc_dir,uhslc_id)) 
+        print('               <td><a href="%s/daily/d%03d.nc">daily</a> <a href="%s/hourly/h%03d.nc">hourly</a></td>' % (nc_dir,uhslc_id,nc_dir,uhslc_id)) 
         print('               <td><a href="%s/fdd/OS_UH-FDD%03d_20170628_R.nc">daily</a> <a href="%s/fdh/OS_UH-FDH%03d_20170628_R.nc">hourly</a></td>' % (oldnc_dir,uhslc_id,oldnc_dir,uhslc_id))
         print('           </tr>')
         print('')
