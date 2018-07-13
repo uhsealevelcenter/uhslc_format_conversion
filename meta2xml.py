@@ -72,7 +72,7 @@ for stn in range(length):
 
     print('  <station>')
     if uhslc_id != '':
-        print('    <uhslc_id>%s</uhslc_id>' % uhslc_id)
+        print('    <uhslc_id>%03d</uhslc_id>' % int(uhslc_id))
     else:
         # print('    <uhslc_id/>')
         print('    <uhslc_id></uhslc_id>')
