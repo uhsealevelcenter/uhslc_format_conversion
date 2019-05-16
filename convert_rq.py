@@ -1,11 +1,17 @@
 # ---------------------------------------------------------------------------
 
 import os
+import sys
 import gc
 from glob import glob
 import numpy as np
 
 import readwrite as rw
+
+if len(sys.argv) == 2:
+    stnid = str(sys.argv[1])
+else:
+    stnid = '*'
 
 # ---------------------------------------------------------------------------
 
@@ -42,7 +48,8 @@ for b in basins:
         os.makedirs(csv_dir_bd)
     
     # get names of .dat files
-    sta_files = glob(init['dat_dir'] + 'rqds/' + b + '/daily/*.dat')
+    #sta_files = glob(init['dat_dir'] + 'rqds/' + b + '/daily/*.dat')
+    sta_files = glob(init['dat_dir'] + 'rqds/' + b + '/daily/d' + stnid + '?.dat')
     
     # loop over daily .dat files
     pb = rw.ProgressBar(len(sta_files), '\nConverting daily RQ ' + b + ' ...')
