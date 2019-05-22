@@ -50,7 +50,7 @@ for b in basins:
     # get names of .dat files
     #sta_files = glob(init['dat_dir'] + 'rqds/' + b + '/daily/*.dat')
     sta_files = glob(init['dat_dir'] + 'rqds/' + b + '/daily/d' + stnid + '?.dat')
-    
+ 
     # loop over daily .dat files
     pb = rw.ProgressBar(len(sta_files), '\nConverting daily RQ ' + b + ' ...')
     for idx, f in enumerate(sta_files):
@@ -87,7 +87,7 @@ for b in basins:
         os.makedirs(csv_dir_bh)
     
     # get directories with .dat files for each station
-    sta_dir = glob(init['dat_dir'] + 'rqds/' + b + '/hourly/*/')
+    sta_dir = glob(init['dat_dir'] + 'rqds/' + b + '/hourly/h' + stnid + '?/')
     
     # read the station .dat files and write new formats
     pb = rw.ProgressBar(len(sta_dir), '\nConverting hourly RQ ' + b + ' ...')
@@ -95,6 +95,7 @@ for b in basins:
     
         # aggregate data from .dat files for this station
         sta_files = glob(d + '*.dat')
+        sta_files.sort()
         sta = rw.StationHourlyRQ(b)
     
         try:
