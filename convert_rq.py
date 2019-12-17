@@ -1,7 +1,7 @@
 # ---------------------------------------------------------------------------
 
-import os
-import sys
+import os,sys
+import time,shutil,zipfile,urllib.request
 import gc
 from glob import glob
 import numpy as np
@@ -14,6 +14,36 @@ else:
     stnid = '*'
 
 # ---------------------------------------------------------------------------
+# setup source dirs
+#os.makedirs('global', exist_ok=True)
+
+os.makedirs('data/dat/rqds', exist_ok=True)
+os.makedirs('data/csv', exist_ok=True)
+os.makedirs('data/netcdf', exist_ok=True)
+
+
+rqfile = 'all_rqds.zip'
+if not os.path.isfile(rqfile) or (time.time() - os.path.getmtime(rqfile) > 86400):
+    print ('Download RQ\n')
+    url = 'https://uhslc.soest.hawaii.edu/rqds/all_rqds.zip'
+    zfn =  os.path.basename(url)
+    with urllib.request.urlopen(url) as response, open(zfn, 'wb') as out_file:
+        shutil.copyfileobj(response, out_file)
+    with zipfile.ZipFile(zfn,"r") as zip_ref:
+        zip_ref.extractall('data/dat/rqds')
+
+    basins = ['atlantic','pacific','indian']
+    for basin in basins:
+        try:
+            hourly_files = glob('data/dat/rqds/' + basin + '/hourly/' + '*zip')
+            pb = rw.ProgressBar(len(hourly_files), '\nUnpacking ' + basin + ' hourly RQ ...')
+            for idx, f in enumerate(hourly_files):
+                with zipfile.ZipFile(f,"r") as zip_ref:
+                    zip_ref.extractall(f[:-4])
+                pb.update()
+        except Exception as e:
+            msg = 'While processing ' + str(f) + ':\n' + str(e)
+            print(msg)
 
 # initialize source and target directories, etc.
 # see first function definition in readwrite.py
