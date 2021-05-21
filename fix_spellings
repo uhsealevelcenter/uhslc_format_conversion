@@ -1,0 +1,6 @@
+#mv data/atlantic/doc/qa283c.dmt  backup
+#cat backup/qa283c.dmt | sed -e 's/Origiator    :/Originator   :' > foo
+# OSX
+sed -i '.foo' 's/Origiator\ \ \ \ \:/Originator\ \ \ \:/g' data/atlantic/doc/qa283c.dmt
+sed -i '.foo' 's/Origiator\ \ \ \ \:/Originator\ \ \ \:/g' data/atlantic/doc/qa708b.dmt
+
