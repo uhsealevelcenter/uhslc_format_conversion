@@ -45,6 +45,7 @@ for idx, file in enumerate(dmt_files):
              "gloss":M.stn_gloss,
              "toga":M.stn_toga,
              "nodc":M.stn_nodc,
+             "jasl":M.stn_jasl,
              "contributor":M.contributor,
              "originator":M.originator,
              "originatornum":M.stn_originatornum,
