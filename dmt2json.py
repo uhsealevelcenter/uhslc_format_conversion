@@ -13,7 +13,8 @@ from glob import glob
 
 infile = "test.dmt"
 
-dmt_files = glob('data/*/doc/qa????.dmt')
+#dmt_files = glob('data/*/doc/qa????.dmt')
+dmt_files = glob('data/dat/rqds/*/doc/qa????.dmt')
 dmt_files.sort()
 
 # invalid encoding files
@@ -26,7 +27,7 @@ blacklist = []
 #print(dmt_files)
 dmts=[]
 for idx, file in enumerate(dmt_files):
-    #print(f)
+    print(file)
     with open(file) as f:
         if file not in blacklist:
            #print(file)
