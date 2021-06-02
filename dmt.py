@@ -60,7 +60,9 @@ class dmt:
             self.stn_nodc = self.header[3][61:].strip()
         
         self.sources = self.body[0:30]
-        cidx = [idx for idx, s in enumerate(self.sources) if 'Originator   :' in s][0]
+        #cidx = [idx for idx, s in enumerate(self.sources) if 'Originator   :' in s][0]
+        cidx = [idx for idx, s in enumerate(self.sources) if 'Origi' in s][0]
+
         #print(cidx)
         oidx = [idx for idx, s in enumerate(self.sources[cidx:]) if 'Original Data:' in s][0]
         

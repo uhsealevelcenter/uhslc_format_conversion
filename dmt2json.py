@@ -8,38 +8,36 @@ Created on Fri May 21 11:28:54 2021
 
 import dmt
 import pickle
+import json
 from glob import glob
 #from geojson import Feature, Point, FeatureCollection
-
-infile = "test.dmt"
 
 #dmt_files = glob('data/*/doc/qa????.dmt')
 dmt_files = glob('data/dat/rqds/*/doc/qa????.dmt')
 dmt_files.sort()
 
 # invalid encoding files
-# blacklist = ['data/atlantic/doc/qa227a.dmt','data/atlantic/doc/qa271a.dmt','data/atlantic/doc/qa822a.dmt',
-#             'data/atlantic/doc/qa824a.dmt','data/indian/doc/qa175a.dmt']
+blacklist = ['data/dat/rqds/atlantic/doc/qa227a.dmt','data/dat/rqds/atlantic/doc/qa271a.dmt','data/dat/rqds/atlantic/doc/qa822a.dmt',
+             'data/dat/rqds/atlantic/doc/qa824a.dmt','data/dat/rqds/indian/doc/qa175a.dmt']
 
 # instead of this run the convert_encoding.sh
-blacklist = []
+#blacklist = []
 
 #print(dmt_files)
 dmts=[]
 for idx, file in enumerate(dmt_files):
     print(file)
-    with open(file) as f:
-        if file not in blacklist:
-           #print(file)
+    if not file in blacklist:
+        with open(file) as f:
            foo = f.readlines()
            M = dmt.dmt(foo)
-        #print(M.stn_gloss)
-        #print(M.stn_name)
-        #print(file)
-        #print(M.contributor)
-        #print(M.originator)
+    else:
+        with open(file, encoding="ISO-8859-1") as f:
+           foo = f.readlines()
+           M = dmt.dmt(foo)
 
-        d = {"name":M.stn_name, 
+
+    d = {"name":M.stn_name, 
              "country": M.stn_country,
              "timezone":M.stn_timezone,
              "timemeridian":M.stn_timemeridian,
@@ -50,7 +48,12 @@ for idx, file in enumerate(dmt_files):
              "contributor":M.contributor,
              "originator":M.originator,
              "originatornum":M.stn_originatornum,
-            }
-        dmts.append(d)
+        }
+    dmts.append(d)
     
 pickle.dump(dmts, open( "dmts.pkl", "wb" ) )
+
+with open('dmts.json', 'w') as f:
+    json.dump(dmts, f)
+
+
