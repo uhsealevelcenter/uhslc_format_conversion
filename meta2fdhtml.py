@@ -10,10 +10,10 @@ if os.path.exists('./meta.geojson'):
 s = meta['features']
 length = len(s)
 
-dat_dir = "http://uhslc.soest.hawaii.edu/woce"
-csv_dir = "http://uhslc.soest.hawaii.edu/data/csv/fast"
-nc_dir = "http://uhslc.soest.hawaii.edu/data/netcdf/fast"
-oldnc_dir = "http://uhslc.soest.hawaii.edu/data/nc"
+dat_dir = "/woce"
+csv_dir = "/data/csv/fast"
+nc_dir = "/data/netcdf/fast"
+oldnc_dir = "/data/nc"
 
 print('    <table id="table" class="tablesorter">')
 print('      <thead>')
