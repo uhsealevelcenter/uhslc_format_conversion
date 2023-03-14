@@ -585,6 +585,8 @@ class StationHourlyFD(Station):
             for line in f:
 
                 if line[17:20] == 'LAT': continue
+                if line[14:17] == 'LAT': continue
+                if line[12:20] == '99999999': continue
 
                 if line[15] == ' ': line = line[:15] + '0' + line[16:]
                 if line[17] == ' ': line = line[:17] + '0' + line[18:]
