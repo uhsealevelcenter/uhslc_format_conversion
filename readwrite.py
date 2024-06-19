@@ -532,6 +532,7 @@ class StationHourlyFD(Station):
     def __init__(self):
         Station.__init__(self)
         self.init_as_FD('hourly')
+        self.basin = None
 
     def dat_read(self, fname, meta):
 
@@ -620,6 +621,7 @@ class StationDailyFD(Station):
     def __init__(self):
         Station.__init__(self)
         self.init_as_FD('daily')
+        self.basin = None
 
     def dat_read(self, fname, meta):
 
