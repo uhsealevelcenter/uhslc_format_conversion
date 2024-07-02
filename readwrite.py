@@ -1,6 +1,7 @@
 # ---------------------------------------------------------------------------
 
 import os
+import re
 import numpy as np
 import datetime as dt
 import netCDF4, urllib, xmltodict, json, time
@@ -514,7 +515,9 @@ class StationDailyRQ(Station):
                 t0 = dt.datetime(int(line[10:14]),1,1,12,0) \
                     + (int(line[15:18]) - 1)*dt.timedelta(days=1)
                 tline = [t0 + h*dt.timedelta(days=1) for h in np.arange(12)]
-                hline = [int(line[k:k+5]) for k in 20+5*np.arange(12)]
+                # hline = [int(line[k:k+5]) for k in 20+5*np.arange(12)]
+                # Fix to handle existence of -9999 and lacking space between data values.
+                hline = [int(num) for num in re.findall(r'-?\d+', line[20:])]
 
                 for t, d in zip(tline, hline):
                     if d != -9999:
