@@ -511,6 +511,11 @@ class StationDailyRQ(Station):
             # loop over each line of data
             for line in f:
 
+                # Remove any leading/trailing whitespace and skip empty lines.
+                line = line.strip()
+                if not line:
+                    continue
+
                 # t0 = dt.datetime(int(line[10:14]),1,1,0,0) \
                 t0 = dt.datetime(int(line[10:14]),1,1,12,0) \
                     + (int(line[15:18]) - 1)*dt.timedelta(days=1)
