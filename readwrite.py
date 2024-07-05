@@ -697,9 +697,18 @@ class StationDailyFD(Station):
                 self.time.pytime.extend([t0 + ((int(line[17])-1)*11 + d)\
                     *dt.timedelta(days=1) for d in np.arange(n_days)])
 
-                self.sea_level.data.extend([int(data[k:k+5]) \
-                    if int(data[k:k+5]) != 9999 else self.sea_level.fill_value
-                    for k in 5*np.arange(n_days)])
+                # self.sea_level.data.extend([int(data[k:k+5]) \
+                    # if int(data[k:k+5]) != 9999 else self.sea_level.fill_value
+                    # for k in 5*np.arange(n_days)])
+
+                for k in 5 * np.arange(n_days):
+                    try:
+                        value = int(data[k:k+5])
+                        if value == 9999:
+                            value = self.sea_level.fill_value
+                    except ValueError:
+                        value = self.sea_level.fill_value
+                    self.sea_level.data.append(value)
             
             # get last time in the data that is RQ
             self.last_rq_date.pytime = dt.datetime(1,1,1,0,0,0)
