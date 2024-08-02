@@ -114,7 +114,8 @@ for stn in range(length):
             print('               <td><a href="%s/%s/daily/d%03d%s.csv">daily</a> <a href="%s/%s/hourly/h%03d%s.csv">hourly</a></td>' % (csv_dir,rq_basin,uhslc_id,vrsn,csv_dir,rq_basin,uhslc_id,vrsn))
             print('               <td><a href="%s/%s/daily/d%03d%s.nc">daily</a> <a href="%s/%s/hourly/h%03d%s.nc">hourly</a></td>' % (nc_dir,rq_basin,uhslc_id,vrsn,nc_dir,rq_basin,uhslc_id,vrsn)) 
             print('               <td><a href="%s/rqd/OS_UH-RQD%03d%s_20161203_R.nc">daily</a> <a href="%s/rqh/OS_UH-RQH%03d%s_20160323_R.nc">hourly</a></td>' % (oldnc_dir,uhslc_id,vrsn.upper(),oldnc_dir,uhslc_id,vrsn.upper()))
-            print('              <td><a href="/rqds/%s/doc/qa%03d%s.dmt">meta</a></td>' % (rq_basin,uhslc_id,vrsn))
+            # print('              <td><a href="/rqds/%s/doc/qa%03d%s.dmt">meta</a></td>' % (rq_basin,uhslc_id,vrsn))
+            print('              <td><a href="/rqds/metadata_yaml/%03d%smeta.yaml">meta</a></td>' % (uhslc_id,vrsn.upper()))
             print('           </tr>')
             print('')
 
