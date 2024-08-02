@@ -84,6 +84,11 @@ for b in basins:
     # loop over daily .dat files
     pb = rw.ProgressBar(len(sta_files), '\nConverting daily RQ ' + b + ' ...')
     for idx, f in enumerate(sta_files):
+
+        # Skip file(s) causing issues.
+        sta_filename = os.path.basename(f)
+        if sta_filename == 'd164aold.dat':
+            continue
     
         sta = rw.StationDailyRQ(b)
     
