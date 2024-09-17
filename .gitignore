@@ -153,7 +153,7 @@ cython_debug/
 .DS_Store
 
 # Project Specific
-meta.geojson
+meta.geojson*
 
 (base) dyoungs-M1-Mini:uhslc_format_conversion dyoung$ more .gitignore
 # Byte-compiled / optimized / DLL files
@@ -312,4 +312,9 @@ cython_debug/
 
 # Project Specific
 meta.geojson
-
+*.zip
+*.tgz
+*.json
+/data
+*.geojson
+*.csv

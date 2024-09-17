@@ -1,6 +1,7 @@
 # ---------------------------------------------------------------------------
 
 import os
+import re
 import numpy as np
 import datetime as dt
 import netCDF4, urllib, xmltodict, json, time
@@ -510,11 +511,18 @@ class StationDailyRQ(Station):
             # loop over each line of data
             for line in f:
 
+                # Remove any leading/trailing whitespace and skip empty lines.
+                line = line.strip()
+                if not line:
+                    continue
+
                 # t0 = dt.datetime(int(line[10:14]),1,1,0,0) \
                 t0 = dt.datetime(int(line[10:14]),1,1,12,0) \
                     + (int(line[15:18]) - 1)*dt.timedelta(days=1)
                 tline = [t0 + h*dt.timedelta(days=1) for h in np.arange(12)]
-                hline = [int(line[k:k+5]) for k in 20+5*np.arange(12)]
+                # hline = [int(line[k:k+5]) for k in 20+5*np.arange(12)]
+                # Fix to handle existence of -9999 and lacking space between data values.
+                hline = [int(num) for num in re.findall(r'-?\d+', line[20:])]
 
                 for t, d in zip(tline, hline):
                     if d != -9999:
@@ -689,10 +697,19 @@ class StationDailyFD(Station):
                 self.time.pytime.extend([t0 + ((int(line[17])-1)*11 + d)\
                     *dt.timedelta(days=1) for d in np.arange(n_days)])
 
-                self.sea_level.data.extend([int(data[k:k+5]) \
-                    if int(data[k:k+5]) != 9999 else self.sea_level.fill_value
-                    for k in 5*np.arange(n_days)])
+                # self.sea_level.data.extend([int(data[k:k+5]) \
+                    # if int(data[k:k+5]) != 9999 else self.sea_level.fill_value
+                    # for k in 5*np.arange(n_days)])
             
+                for k in 5 * np.arange(n_days):
+                    try:
+                        value = int(data[k:k+5])
+                        if value == 9999:
+                            value = self.sea_level.fill_value
+                    except ValueError:
+                        value = self.sea_level.fill_value
+                    self.sea_level.data.append(value)
+
             # get last time in the data that is RQ
             self.last_rq_date.pytime = dt.datetime(1,1,1,0,0,0)
             if uidx is not None:

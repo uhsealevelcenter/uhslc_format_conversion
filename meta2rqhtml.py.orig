@@ -10,10 +10,10 @@ if os.path.exists('./meta.geojson'):
 s = meta['features']
 length = len(s)
 
-dat_dir = "/rqds"
-csv_dir = "/data/csv/rqds"
-nc_dir = "/data/netcdf/rqds"
-oldnc_dir = "/data/nc"
+dat_dir = "http://uhslc.soest.hawaii.edu/rqds"
+csv_dir = "http://uhslc.soest.hawaii.edu/data/csv/rqds"
+nc_dir = "http://uhslc.soest.hawaii.edu/data/netcdf/rqds"
+oldnc_dir = "http://uhslc.soest.hawaii.edu/data/nc"
 
 print('    <table id="table" class="tablesorter">')
 print('      <thead>')
@@ -114,8 +114,7 @@ for stn in range(length):
             print('               <td><a href="%s/%s/daily/d%03d%s.csv">daily</a> <a href="%s/%s/hourly/h%03d%s.csv">hourly</a></td>' % (csv_dir,rq_basin,uhslc_id,vrsn,csv_dir,rq_basin,uhslc_id,vrsn))
             print('               <td><a href="%s/%s/daily/d%03d%s.nc">daily</a> <a href="%s/%s/hourly/h%03d%s.nc">hourly</a></td>' % (nc_dir,rq_basin,uhslc_id,vrsn,nc_dir,rq_basin,uhslc_id,vrsn)) 
             print('               <td><a href="%s/rqd/OS_UH-RQD%03d%s_20161203_R.nc">daily</a> <a href="%s/rqh/OS_UH-RQH%03d%s_20160323_R.nc">hourly</a></td>' % (oldnc_dir,uhslc_id,vrsn.upper(),oldnc_dir,uhslc_id,vrsn.upper()))
-            # print('              <td><a href="/rqds/%s/doc/qa%03d%s.dmt">meta</a></td>' % (rq_basin,uhslc_id,vrsn))
-            print('              <td><a href="/rqds/metadata_yaml/%03d%smeta.yaml">meta</a></td>' % (uhslc_id,vrsn.upper()))
+            print('              <td><a href="http://uhslc.soest.hawaii.edu/rqds/%s/doc/qa%03d%s.dmt">meta</a></td>' % (rq_basin,uhslc_id,vrsn))
             print('           </tr>')
             print('')
 
