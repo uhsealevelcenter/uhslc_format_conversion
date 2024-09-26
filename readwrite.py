@@ -938,6 +938,12 @@ class Metadata(object):
         # sort stations in list by increasing uhslc id
         self.data['features'] = sorted(self.data['features'],
             key=lambda k: k['properties']['uhslc_id'])
+
+        # Ensure country codes are normalized.
+        for feature in self.data['features']:
+            country_code = feature['properties'].get('country_code')
+            if isinstance(country_code, int):
+                feature['properties']['country_code'] = str(country_code)
         
         with open('./meta.geojson', 'w') as f:
             json.dump(self.data, f)
