@@ -944,7 +944,13 @@ class Metadata(object):
             country_code = feature['properties'].get('country_code')
             if isinstance(country_code, int):
                 feature['properties']['country_code'] = str(country_code)
-        
+            # Sort rq_versions alphabetically by its keys.
+            rq_versions = feature['properties'].get('rq_versions')
+            if isinstance(rq_versions, dict):
+                feature['properties']['rq_versions'] = dict(
+                    sorted(rq_versions.items())
+                )
+
         with open('./meta.geojson', 'w') as f:
             json.dump(self.data, f)
 
