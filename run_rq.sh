@@ -10,7 +10,7 @@ SRC_HOME="/home/kaimoku/data/rqds"
 SRV_HOME="/srv/htdocs/uhslc.soest.hawaii.edu"
 
 ### CHECK FOR NEW METADATA AND NEW DATA FILES TO DETERMINE WHETHER TO PROCEED. ###
-NEW_METADATA_CHECK=`find ${SRV_HOME}/rqds/metadata_yaml/ -type f -name "*yaml" -mtime -1`
+NEW_METADATA_CHECK=`find ${SRC_HOME}/metadata_yaml/ -type f -name "*yaml" -mtime -1`
 NEW_DATA_CHECK=`find ${SRC_HOME}/ -type f \( -name "*.zip" -o -name "*.dat" \) -mtime -1`
 if [ ! -z "${NEW_METADATA_CHECK}" ] || [ ! -z "${NEW_DATA_CHECK}" ] || [ "${FORCE_RUN}" = "force" ]; then
 
