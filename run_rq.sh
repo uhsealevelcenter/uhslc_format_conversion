@@ -15,17 +15,21 @@ NEW_DATA_CHECK=`find ${SRC_HOME}/ -type f \( -name "*.zip" -o -name "*.dat" \) -
 if [ ! -z "${NEW_METADATA_CHECK}" ] || [ ! -z "${NEW_DATA_CHECK}" ] || [ "${FORCE_RUN}" = "force" ]; then
 
   date
+
+  ### UPDATE RESEARCH QUALITY DATA FROM THE SOURCE AND THE META GEOJSON FILE. ###
   time python3 convert_rq.py
 
+  ### SYNC UPDATED DATA TO THE WEB. ###
   tar czf netcdf.tgz -C data netcdf
   rsync -au data/csv data/netcdf meta.geojson netcdf.tgz ${SRV_HOME}/data
-
   rsync -auv ${SRV_HOME}/data/netcdf/rqds/{pacific,atlantic,indian}/hourly/h* ${SRV_HOME}/data/netcdf/rqds/global/hourly
   rsync -auv ${SRV_HOME}/data/netcdf/rqds/{pacific,atlantic,indian}/daily/d* ${SRV_HOME}/data/netcdf/rqds/global/daily
 
+  ### UPDATE THE RESEARCH QUALITY WEB HTML. ###
   python3 meta2rqhtml.py  > ${SRV_HOME}/data/rq.html
-  # python3 meta2fdhtml.py  > ${SRV_HOME}/data/fd.html
-  # python3 meta2allxml.py > ${SRV_HOME}/station/list/all.xml
+
+  ### CLEAN UP LOGS OLDER THAN 30 DAYS. ###
+  find /tmp/ -type f -name "makerq_*.log" -mtime +30 2>/dev/null | xargs -i rm {}
 
   date
 
