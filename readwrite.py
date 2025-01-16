@@ -280,14 +280,15 @@ class Station(ReadWriteObj):
         self.time.attributes['units'] = 'days since ' + t_ref_str
 
         if 'last_rq_date' in v_list:
+            self.last_rq_date.attributes['units'] = 'days since ' + t_ref_str
             if self.last_rq_date.pytime == dt.datetime(1,1,1,0,0,0):
                 self.last_rq_date.data = 0
             else:
                 self.last_rq_date.data = round((self.last_rq_date.pytime
                     - self.time.t_ref).total_seconds()/(60*60*24) \
                     - self.time.gmt_offset, 6)
-                self.last_rq_date.attributes['units'] = \
-                    'days since ' + t_ref_str
+#                self.last_rq_date.attributes['units'] = \
+#                    'days since ' + t_ref_str
 
         # open netcdf file
         rootgrp = netCDF4.Dataset(fname, mode='w', clobber=True,
