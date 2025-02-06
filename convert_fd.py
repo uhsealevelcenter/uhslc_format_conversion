@@ -31,7 +31,7 @@ os.makedirs('data/netcdf', exist_ok=True)
 # Collect source data, probably move this to class
 fdfile = 'all_fast.zip'
 
-if not os.path.isfile(fdfile) or (time.time() - os.path.getmtime(fdfile) > 86400):
+if not os.path.isfile(fdfile) or (time.time() - os.path.getmtime(fdfile) >= 86400):
 
     print ('Download FD\n')
     url = 'https://uhslc.soest.hawaii.edu/woce/all_fast.zip'
