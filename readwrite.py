@@ -942,6 +942,10 @@ class Metadata(object):
 
         # Ensure country codes are normalized.
         for feature in self.data['features']:
+            # Strip leading/trailing spaces from the name
+            name = feature['properties'].get('name')
+            if isinstance(name, str):
+                feature['properties']['name'] = name.strip()
             country_code = feature['properties'].get('country_code')
             if isinstance(country_code, int):
                 feature['properties']['country_code'] = str(country_code)

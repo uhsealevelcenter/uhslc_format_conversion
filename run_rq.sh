@@ -4,7 +4,7 @@ export PATH=/home/uhslc/anaconda3/bin:$PATH
 
 FORCE_RUN=$1
 
-cd ~/uhslc_format_conversion
+cd /home/uhslc/uhslc_format_conversion
 
 SRC_HOME="/home/kaimoku/data/rqds"
 SRV_HOME="/srv/htdocs/uhslc.soest.hawaii.edu"
@@ -17,7 +17,7 @@ if [ ! -z "${NEW_METADATA_CHECK}" ] || [ ! -z "${NEW_DATA_CHECK}" ] || [ "${FORC
   date
 
   ### UPDATE RESEARCH QUALITY DATA FROM THE SOURCE AND THE META GEOJSON FILE. ###
-  time python3 convert_rq.py
+  time /home/uhslc/anaconda3/bin/python3 convert_rq.py
 
   ### SYNC UPDATED DATA TO THE WEB. ###
   tar czf netcdf.tgz -C data netcdf
@@ -26,10 +26,13 @@ if [ ! -z "${NEW_METADATA_CHECK}" ] || [ ! -z "${NEW_DATA_CHECK}" ] || [ "${FORC
   rsync -auv ${SRV_HOME}/data/netcdf/rqds/{pacific,atlantic,indian}/daily/d* ${SRV_HOME}/data/netcdf/rqds/global/daily
 
   ### UPDATE THE RESEARCH QUALITY WEB HTML. ###
-  python3 meta2rqhtml.py  > ${SRV_HOME}/data/rq.html
+  /home/uhslc/anaconda3/bin/python3 meta2rqhtml.py > ${SRV_HOME}/data/rq.html
 
   ### CLEAN UP LOGS OLDER THAN 30 DAYS. ###
   find /tmp/ -type f -name "makerq_*.log" -mtime +30 2>/dev/null | xargs -i rm {}
+
+  ### RUN FD PROCESS FOLLOWING COMPLETION OF RQ PROCESS BY DEFAULT. ###
+  /home/uhslc/uhslc_format_conversion/run_fd.sh
 
   date
 
