@@ -904,12 +904,20 @@ class Metadata(object):
             self.data['features'][uidx]\
                 ['geometry']['coordinates'] = [sta.lon.data, sta.lat.data]
 
-            oldest = \
-                self.data['features'][uidx]['properties']['fd_span']['oldest']
-            if (oldest is None or
-                sta.time.pytime[0] < dt.datetime.strptime(oldest, '%Y-%m-%d')):
-                self.data['features'][uidx]['properties']['fd_span']\
-                    ['oldest'] = sta.time.pytime[0].strftime('%Y-%m-%d')
+            rq_versions = self.data['features'][uidx]['properties'].get('rq_versions')
+            fd_oldest = self.data['features'][uidx]['properties']['fd_span']['oldest']
+
+            # Determine new oldest based on RQ versions if possible
+            if rq_versions:
+                latest_version_key = sorted(rq_versions.keys())[-1]
+                rq_begin = rq_versions[latest_version_key].get('begin')
+                if rq_begin:
+                    self.data['features'][uidx]['properties']['fd_span']['oldest'] = rq_begin
+            else:
+                # Fall back to original logic
+                if (fd_oldest is None or
+                    sta.time.pytime[0] < dt.datetime.strptime(fd_oldest, '%Y-%m-%d')):
+                    self.data['features'][uidx]['properties']['fd_span']['oldest'] = sta.time.pytime[0].strftime('%Y-%m-%d')
 
             latest = \
                 self.data['features'][uidx]['properties']['fd_span']['latest']
