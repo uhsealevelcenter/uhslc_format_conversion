@@ -38,12 +38,19 @@ print('       <tbody>')
 print('')
 
 for stn in range(length):
-#for stn in range(2):
+
     if s[stn]['properties']['country'] == "South Africa" and s[stn]['properties']['gloss_id'] == 0:
+        continue
+
+    if s[stn]['properties']['country'] == "South Africa":
+        continue
+
+    if s[stn]['properties']['name'] == "Walvis Bay":
         continue
 
     if s[stn]['properties']['rq_versions']:
         versions = list(sorted(s[stn]['properties']['rq_versions'].keys()))
+
     for v in range(len(versions)):
         vrsn = versions[v]
 
